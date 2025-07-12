@@ -1,0 +1,202 @@
+
+
+# 📄 Requirements Document
+
+### **Project Title:** QGJob Test Orchestration System
+
+### **Client:** QualGent
+
+### **Developer:Abdullah Khalid
+
+
+---
+
+## ✅ 1. **Objective**
+
+To develop a modular and scalable CLI + Backend system called `qgjob` that allows organizations to submit and track AppWright end-to-end test jobs across various device targets, supporting grouping by app version, queueing, scheduling, and integration with GitHub Actions CI pipelines.
+
+---
+
+## ✅ 2. **Tech Stack**
+
+| Layer                | Technology                          |
+| -------------------- | ----------------------------------- |
+| CLI Tool             | Node.js + TypeScript + commander.js |
+| Backend Service      | Node.js + Express.js                |
+| Queueing System      | Redis + BullMQ                      |
+| API Communication    | REST (Axios on CLI)                 |
+| CI/CD Integration    | GitHub Actions                      |
+| Optional Persistence | PostgreSQL + Prisma (optional)      |
+
+---
+
+## ✅ 3. **Key Features & Functional Requirements**
+
+### 🔹 CLI Tool: `qgjob`
+
+A global command-line tool with the following features:
+
+#### a. Submit Test Job
+
+```bash
+qgjob submit --org-id=qualgent --app-version-id=xyz123 --test=tests/onboarding.spec.js --target=emulator
+```
+
+* Sends a POST request to the backend.
+* Payload:
+
+  ```json
+  {
+    "org_id": "qualgent",
+    "app_version_id": "xyz123",
+    "test_path": "tests/onboarding.spec.js",
+    "priority": 1,
+    "target": "emulator"
+  }
+  ```
+
+#### b. Check Job Status
+
+```bash
+qgjob status --job-id=abc456
+```
+
+* Sends a GET request to retrieve job status.
+* Displays:
+
+  * Status: Queued / Running / Completed / Failed
+  * Assigned Agent
+  * Output Logs (if any)
+
+#### c. Help and UX
+
+* `qgjob --help` for all available commands and usage.
+* Proper error messages and validations.
+
+---
+
+### 🔹 Backend Service: `job-server`
+
+Node.js Express service that orchestrates job submission, queuing, and execution.
+
+#### API Endpoints
+
+| Method | Route              | Description                       |
+| ------ | ------------------ | --------------------------------- |
+| POST   | `/api/jobs/submit` | Accepts job payload and queues it |
+| GET    | `/api/jobs/:jobId` | Returns job status and details    |
+| GET    | `/api/health`      | Health check endpoint             |
+
+#### Core Modules
+
+1. **Job Queueing (BullMQ + Redis)**
+
+   * Job payloads stored in Redis with metadata.
+   * Grouped by `app_version_id` to batch tests per device.
+
+2. **Job Scheduling**
+
+   * Jobs grouped & assigned to available test agents (mocked or real).
+   * Retry mechanism and failure handling.
+
+3. **Job Runner Simulation (Local for now)**
+
+   * Simulates execution of test file with logs & status update.
+   * In real-world: triggers AppWright agents.
+
+4. **Status Tracker**
+
+   * Each job has: `queued`, `running`, `success`, `failed`.
+
+---
+
+### 🔹 GitHub Actions Integration
+
+Workflow to:
+
+* Checkout code
+* Install `qgjob` via npm
+* Submit test job
+* Poll job status and fail CI if test fails
+
+#### Example YAML:
+
+```yaml
+name: AppWright Tests
+
+on: [push]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm install -g qgjob
+      - run: qgjob submit --org-id=qualgent --app-version-id=xyz123 --test=tests/onboarding.spec.js
+```
+
+---
+
+## ✅ 4. **Non-Functional Requirements**
+
+| Attribute       | Description                                                        |
+| --------------- | ------------------------------------------------------------------ |
+| **Scalability** | Horizontal Redis-based job processing supports multiple workers    |
+| **Modularity**  | CLI, backend, and job execution logic separated                    |
+| **Reliability** | Handles retries and crash-safe job queues                          |
+| **Usability**   | CLI is developer-friendly with clear commands and help             |
+| **Efficiency**  | Groups tests by `app_version_id` to minimize repeated app installs |
+
+---
+
+## ✅ 5. **Optional Enhancements**
+
+| Feature            | Description                                           |
+| ------------------ | ----------------------------------------------------- |
+| Job Prioritization | Priority-based scheduling per org/test                |
+| Persistent Storage | PostgreSQL for job history/logs                       |
+| Monitoring         | `/metrics` or `/dashboard` endpoint for observability |
+| Docker Support     | Docker Compose for Redis + backend server             |
+| Agent Pooling      | Track active/idle agents to optimize job distribution |
+
+---
+
+## ✅ 6. **Deliverables**
+
+1. ✅ GitHub Repo with:
+
+   * CLI Tool (`/cli`)
+   * Backend Server (`/server`)
+   * Example GitHub Actions Workflow (`.github/workflows/appwright.yml`)
+2. ✅ `README.md` with:
+
+   * Setup instructions
+   * Architecture diagram
+   * Grouping/scheduling explanation
+   * End-to-end test run guide
+3. ✅ Sample Output Logs (Optional)
+
+---
+
+## ✅ 7. **Architecture Diagram (Simple)**
+
+```
+GitHub Actions CI
+        |
+        v
+    [ qgjob CLI ]
+        |
+        v
+   [ REST API Server ]
+        |
+        v
+   [ Redis Queue (BullMQ) ]
+        |
+        v
+   [ Worker/Agent Simulator ]
+        |
+        v
+    [ Job Results / Logs ]
+```
+
+

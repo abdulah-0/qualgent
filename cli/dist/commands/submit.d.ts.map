@@ -1,0 +1,1 @@
+{"version":3,"file":"submit.d.ts","sourceRoot":"","sources":["../../src/commands/submit.ts"],"names":[],"mappings":"AAYA,UAAU,aAAa;IACrB,KAAK,EAAE,MAAM,CAAC;IACd,YAAY,EAAE,MAAM,CAAC;IACrB,IAAI,EAAE,MAAM,CAAC;IACb,MAAM,EAAE,MAAM,CAAC;IACf,QAAQ,EAAE,MAAM,CAAC;IACjB,MAAM,EAAE,MAAM,CAAC;CAChB;AAQD,wBAAsB,aAAa,CAAC,OAAO,EAAE,aAAa,GAAG,OAAO,CAAC,IAAI,CAAC,CAyEzE"}

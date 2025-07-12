@@ -1,0 +1,46 @@
+{
+  "name": "qgjob-server",
+  "version": "1.0.0",
+  "description": "Backend server for QGJob Test Orchestration System",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [
+    "server",
+    "api",
+    "testing",
+    "orchestration",
+    "express"
+  ],
+  "author": "Abdullah Khalid",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.0",
+    "bullmq": "^4.0.0",
+    "redis": "^4.6.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "uuid": "^9.0.0",
+    "dotenv": "^16.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.0",
+    "@types/cors": "^2.8.0",
+    "@types/morgan": "^1.9.0",
+    "@types/uuid": "^9.0.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node-dev": "^2.0.0",
+    "@types/jest": "^29.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "supertest": "^6.3.0",
+    "@types/supertest": "^2.0.0"
+  }
+}

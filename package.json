@@ -1,0 +1,35 @@
+{
+  "name": "qgjob-orchestration",
+  "version": "1.0.0",
+  "description": "QGJob Test Orchestration System for QualGent",
+  "main": "index.js",
+  "scripts": {
+    "dev:cli": "cd cli && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "npm run build:cli && npm run build:server",
+    "build:cli": "cd cli && npm run build",
+    "build:server": "cd server && npm run build",
+    "install:all": "npm install && cd cli && npm install && cd ../server && npm install",
+    "start:server": "cd server && npm start",
+    "test": "npm run test:cli && npm run test:server",
+    "test:cli": "cd cli && npm test",
+    "test:server": "cd server && npm test"
+  },
+  "keywords": [
+    "testing",
+    "orchestration",
+    "cli",
+    "appwright",
+    "qualgent"
+  ],
+  "author": "Abdullah Khalid",
+  "license": "MIT",
+  "workspaces": [
+    "cli",
+    "server"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
